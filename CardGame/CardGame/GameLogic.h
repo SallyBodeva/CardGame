@@ -10,7 +10,7 @@ void ptintDeck(vector<string> deck);
 void shuffleDeck(vector<string>& deck);
 bool changeTurn(bool previousTurn);
 
-void userAsksForCard(vector<string>& userCards, vector<string>& computerCards, string card);
-void compAsksForCard(vector<string>& userCards, vector<string>& computerCards);
+void userTurn(vector<string>& userCards, vector<string>& computerCards, string card, vector<string>& mainDeck, bool& userContinues);
+void compAsksForCard(vector<string>& userCards, vector<string>& computerCards, vector<string>& mainDeck, bool& compContinues);
 int getCardIndex(vector<string>& deck, string card);
 void startGame();

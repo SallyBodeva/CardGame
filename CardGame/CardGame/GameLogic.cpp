@@ -70,36 +70,80 @@ int getCardIndex(vector<string>& deck, string card) {
 	return -1;
 }
 
-void userAsksForCard(vector<string>& userCards, vector<string>& computerCards, string card) {
+void userTurn(vector<string>& userCards, vector<string>& computerCards, string card, vector<string>& mainDeck, bool& userContinues) {
 
 	int cardIndexAtComputerDeck = getCardIndex(computerCards, card);
+	userContinues = false;
 	while (cardIndexAtComputerDeck != -1)
 	{
+		userContinues = true;
 		userCards.push_back(card);
 		computerCards.erase(computerCards.begin() + cardIndexAtComputerDeck);
 		cardIndexAtComputerDeck = getCardIndex(computerCards, card);
 	}
+
+	if (!mainDeck.empty())
+	{
+		string cardFromMainDeck = mainDeck.back();
+
+		userCards.push_back(cardFromMainDeck);
+		mainDeck.pop_back();
+
+		if (cardFromMainDeck == card) {
+			userContinues = true; 
+		}
+	}
+
 }
 
 
-
-void compAsksForCard(vector<string>& userCards, vector<string>& computerCards) {
+void compAsksForCard(vector<string>& userCards, vector<string>& computerCards, vector<string>& mainDeck, bool& compContinues) {
 
 	srand(time(0));
-	int randomCardIndex = rand() % computerCards.size();
-	
+	int randomCardIndex = rand() % computerCards.size();	
 	string wantedCard = userCards[randomCardIndex];
-
-
 	int cardIndexAtUserDeck = getCardIndex(userCards, wantedCard);
+	
+	compContinues = false;
 
 	while (cardIndexAtUserDeck != -1)
 	{
+		compContinues = true;
 		computerCards.push_back(wantedCard);
 		userCards.erase(userCards.begin() + cardIndexAtUserDeck);
 
 		cardIndexAtUserDeck = getCardIndex(userCards, wantedCard);
 	}
+
+	if (!mainDeck.empty())
+	{
+		string cardFromMainDeck = mainDeck.back();
+
+		userCards.push_back(cardFromMainDeck);
+		mainDeck.pop_back();
+
+		if (cardFromMainDeck == wantedCard) {
+			compContinues = true;
+		}
+	}
+}
+
+bool hasFourCards(vector<string>& cards, string card) {
+
+	int cardCount = 0;
+	
+	for (int i = 0; i < cards.size(); i++)
+	{
+		if (cards[i] == card)
+		{
+			cardCount++;
+		}
+	}
+	if (cardCount == 4)
+	{
+		return true;
+	}
+	return false;
 }
 
 
