@@ -24,7 +24,6 @@ void shuffleDeck(vector<string>& deck) {
 
 void initialiseGame(vector<string>& mainDeckOfCars, vector<string>& userCards, vector<string>& computerCards)
 {
-
 	vector<string> cardTypes = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "A", "J", "Q", "K" };
 
 	for (int i = 0; i < cardTypes.size(); i++)
@@ -89,10 +88,12 @@ void userTurn(vector<string>& userCards, vector<string>& computerCards, string c
 		userContinues = false;
 		while (cardIndexAtComputerDeck != -1)
 		{
+			// Change the logic here, just use if and in case call the method twice...
 			userContinues = true;
 			userCards.push_back(card);
 			computerCards.erase(computerCards.begin() + cardIndexAtComputerDeck);
 			cardIndexAtComputerDeck = getCardIndex(computerCards, card);
+
 		}
 
 		if (!mainDeck.empty())
@@ -211,7 +212,17 @@ void startGame()
 	{
 		if (turn)
 		{
+			cout << "It's your turn to ask your opponent for a card: ";
+			string card;
+			cin >> card;
 
+			bool userContinues = false;
+			userTurn(userCards, compCards, card, mainDeck, userContinues);
+
+			if (userContinues)
+			{
+				cout << "Great, you have received the card you wanted, it is you turn again!..." << endl;
+			}
 		}
 	}
 }
