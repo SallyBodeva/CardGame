@@ -14,7 +14,7 @@ using std::vector;
 void shuffleDeck(vector<string>& deck) {
 	for (int i = deck.size() - 1; i > 0; i--) {
 
-		int j = rand() % (i + 1);  
+		int j = rand() % (i + 1);
 
 		string temp = deck[i];
 		deck[i] = deck[j];
@@ -35,8 +35,6 @@ void initialiseGame(vector<string>& mainDeckOfCars, vector<string>& userCards, v
 		}
 	}
 
-	srand(time(0)); 
-
 	shuffleDeck(mainDeckOfCars);
 
 
@@ -49,6 +47,61 @@ void initialiseGame(vector<string>& mainDeckOfCars, vector<string>& userCards, v
 		mainDeckOfCars.pop_back();
 	}
 }
+
+bool changeTurn(bool previousTurn) {
+
+	return !previousTurn;
+}
+
+int getCardIndex(vector<string>& deck, string card) {
+
+	if (deck.empty())
+	{
+		return -1;
+	}
+
+	for (int i = 0; i < deck.size(); i++)
+	{
+		if (deck[i] == card)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+void userAsksForCard(vector<string>& userCards, vector<string>& computerCards, string card) {
+
+	int cardIndexAtComputerDeck = getCardIndex(computerCards, card);
+	while (cardIndexAtComputerDeck != -1)
+	{
+		userCards.push_back(card);
+		computerCards.erase(computerCards.begin() + cardIndexAtComputerDeck);
+		cardIndexAtComputerDeck = getCardIndex(computerCards, card);
+	}
+}
+
+
+
+void compAsksForCard(vector<string>& userCards, vector<string>& computerCards) {
+
+	srand(time(0));
+	int randomCardIndex = rand() % computerCards.size();
+	
+	string wantedCard = userCards[randomCardIndex];
+
+
+	int cardIndexAtUserDeck = getCardIndex(userCards, wantedCard);
+
+	while (cardIndexAtUserDeck != -1)
+	{
+		computerCards.push_back(wantedCard);
+		userCards.erase(userCards.begin() + cardIndexAtUserDeck);
+
+		cardIndexAtUserDeck = getCardIndex(userCards, wantedCard);
+	}
+}
+
 
 void ptintDeck(vector<string> test) {
 

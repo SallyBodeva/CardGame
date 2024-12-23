@@ -19,8 +19,23 @@ int main()
 
 	initialiseGame(teste,userCards,compCards);
 
-	ptintDeck(userCards);*/
+	ptintDeck(userCards);
 
+	cout << "------------------" << endl;
+
+	ptintDeck(compCards);
+
+
+
+	compAsksForCard(userCards,compCards);
+
+	cout << "------------------" << endl;
+
+	ptintDeck(userCards);
+
+	cout << "------------------" << endl;
+
+	ptintDeck(compCards);*/
 	
 	return 0;
 }
