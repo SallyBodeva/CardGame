@@ -35,6 +35,7 @@ void initialiseGame(vector<string>& mainDeckOfCars, vector<string>& userCards, v
 		}
 	}
 
+	srand(time(0));
 	shuffleDeck(mainDeckOfCars);
 
 
@@ -70,40 +71,58 @@ int getCardIndex(vector<string>& deck, string card) {
 	return -1;
 }
 
+bool isTheAskingValid(vector<string>& cards, string card) {
+
+	int result = getCardIndex(cards, card);
+	if (result != -1)
+	{
+		return true;
+	}
+	return false;
+}
+
 void userTurn(vector<string>& userCards, vector<string>& computerCards, string card, vector<string>& mainDeck, bool& userContinues) {
 
-	int cardIndexAtComputerDeck = getCardIndex(computerCards, card);
-	userContinues = false;
-	while (cardIndexAtComputerDeck != -1)
+	if (isTheAskingValid)
 	{
-		userContinues = true;
-		userCards.push_back(card);
-		computerCards.erase(computerCards.begin() + cardIndexAtComputerDeck);
-		cardIndexAtComputerDeck = getCardIndex(computerCards, card);
-	}
+		int cardIndexAtComputerDeck = getCardIndex(computerCards, card);
+		userContinues = false;
+		while (cardIndexAtComputerDeck != -1)
+		{
+			userContinues = true;
+			userCards.push_back(card);
+			computerCards.erase(computerCards.begin() + cardIndexAtComputerDeck);
+			cardIndexAtComputerDeck = getCardIndex(computerCards, card);
+		}
 
-	if (!mainDeck.empty())
-	{
-		string cardFromMainDeck = mainDeck.back();
+		if (!mainDeck.empty())
+		{
+			string cardFromMainDeck = mainDeck.back();
 
-		userCards.push_back(cardFromMainDeck);
-		mainDeck.pop_back();
+			userCards.push_back(cardFromMainDeck);
+			mainDeck.pop_back();
 
-		if (cardFromMainDeck == card) {
-			userContinues = true; 
+			if (cardFromMainDeck == card)
+			{
+				userContinues = true;
+			}
 		}
 	}
-
+	else
+	{
+		cout << "You cannot ask for a card that you do not already possess.";
+		return;
+	}
 }
 
 
-void compAsksForCard(vector<string>& userCards, vector<string>& computerCards, vector<string>& mainDeck, bool& compContinues) {
+void compTurn(vector<string>& userCards, vector<string>& computerCards, vector<string>& mainDeck, bool& compContinues) {
 
 	srand(time(0));
-	int randomCardIndex = rand() % computerCards.size();	
+	int randomCardIndex = rand() % computerCards.size();
 	string wantedCard = userCards[randomCardIndex];
 	int cardIndexAtUserDeck = getCardIndex(userCards, wantedCard);
-	
+
 	compContinues = false;
 
 	while (cardIndexAtUserDeck != -1)
@@ -122,16 +141,17 @@ void compAsksForCard(vector<string>& userCards, vector<string>& computerCards, v
 		userCards.push_back(cardFromMainDeck);
 		mainDeck.pop_back();
 
-		if (cardFromMainDeck == wantedCard) {
+		if (cardFromMainDeck == wantedCard)
+		{
 			compContinues = true;
 		}
 	}
 }
 
-bool hasFourCards(vector<string>& cards, string card) {
+bool hasFourCards(vector<string>& cards, string card, vector<string>& removedSets) {
 
 	int cardCount = 0;
-	
+
 	for (int i = 0; i < cards.size(); i++)
 	{
 		if (cards[i] == card)
@@ -139,24 +159,59 @@ bool hasFourCards(vector<string>& cards, string card) {
 			cardCount++;
 		}
 	}
-	if (cardCount == 4)
+	if (cardCount == CARD_IN_A_SET)
 	{
+
+		for (int i = 0; i < cards.size(); i++)
+		{
+			if (cards[i] == card)
+			{
+				cards.erase(cards.begin() + i);
+			}
+			else
+			{
+				i++;
+			}
+		}
+
+		removedSets.push_back(card);
 		return true;
 	}
 	return false;
 }
 
 
-void ptintDeck(vector<string> test) {
+void printDeck(vector<string>& deck) {
+	cout << "Deck of Cards:" << endl;
+	cout << "===================" << endl;
 
-	for (int i = 0; i < test.size(); i++)
-	{
-		cout << test[i] << endl;
+	for (size_t i = 0; i < deck.size(); i++) {
+		cout << "*" << "[" << deck[i] << "]" << "*" << endl;
 	}
 
+	cout << "===================" << endl;
 }
 
 void startGame()
 {
+	vector<string> mainDeck;
+	vector<string> userCards;
+	vector<string> compCards;
 
+	cout << "Dealing cards....\n\n";
+
+	initialiseGame(mainDeck, userCards, compCards);
+
+	cout << "You have these cards: " << endl;
+
+	printDeck(userCards);
+
+	bool turn = USER_TURN;
+	while (!mainDeck.empty())
+	{
+		if (turn)
+		{
+
+		}
+	}
 }

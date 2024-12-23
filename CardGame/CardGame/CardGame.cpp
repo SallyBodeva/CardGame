@@ -13,6 +13,9 @@ using std::vector;
 
 int main()
 {
+
+	startGame();
+
 	/*vector<string> teste;
 	vector<string> userCards;
 	vector<string> compCards;
@@ -26,8 +29,8 @@ int main()
 	ptintDeck(compCards);
 
 
-
-	compAsksForCard(userCards,compCards);
+	bool compCon = false;
+	compTurn(userCards,compCards,teste,compCon);
 
 	cout << "------------------" << endl;
 
@@ -35,7 +38,7 @@ int main()
 
 	cout << "------------------" << endl;
 
-	ptintDeck(compCards);*/
+	ptintDeck(compCards);
 	
-	return 0;
+	return 0;*/
 }
