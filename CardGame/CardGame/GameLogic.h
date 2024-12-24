@@ -11,7 +11,7 @@ void shuffleDeck(vector<string>& deck);
 bool changeTurn(bool previousTurn);
 
 bool isTheAskingValid(vector<string>& cards, string card);
-void userTurn(vector<string>& userCards, vector<string>& computerCards, string card, vector<string>& mainDeck, bool& userContinues);
+bool userTurn(vector<string>& userCards, vector<string>& computerCards, string card, vector<string>& mainDeck, bool& isTheTurnValid);
 void compTurn(vector<string>& userCards, vector<string>& computerCards, vector<string>& mainDeck, bool& compContinues);
 int getCardIndex(vector<string>& deck, string card);
 void startGame();

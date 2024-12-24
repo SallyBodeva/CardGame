@@ -12,6 +12,7 @@ using std::string;
 using std::vector;
 
 void shuffleDeck(vector<string>& deck) {
+
 	for (int i = deck.size() - 1; i > 0; i--) {
 
 		int j = rand() % (i + 1);
@@ -20,6 +21,7 @@ void shuffleDeck(vector<string>& deck) {
 		deck[i] = deck[j];
 		deck[j] = temp;
 	}
+
 }
 
 void initialiseGame(vector<string>& mainDeckOfCars, vector<string>& userCards, vector<string>& computerCards)
@@ -30,7 +32,8 @@ void initialiseGame(vector<string>& mainDeckOfCars, vector<string>& userCards, v
 	{
 		for (int j = 0; j < COUNT_OF_CARDS_IN_DECK; j++)
 		{
-			mainDeckOfCars.push_back(cardTypes[i]);
+			string card = cardTypes[i];
+			mainDeckOfCars.push_back(card);
 		}
 	}
 
@@ -80,20 +83,23 @@ bool isTheAskingValid(vector<string>& cards, string card) {
 	return false;
 }
 
-void userTurn(vector<string>& userCards, vector<string>& computerCards, string card, vector<string>& mainDeck, bool& userContinues) {
+bool userTurn(vector<string>& userCards, vector<string>& computerCards, string card, vector<string>& mainDeck, bool& isTheTurnValid) {
 
-	if (isTheAskingValid)
+	bool continous = false;
+	if (isTheAskingValid(userCards, card))
 	{
 		int cardIndexAtComputerDeck = getCardIndex(computerCards, card);
-		userContinues = false;
 		while (cardIndexAtComputerDeck != -1)
 		{
-			// Change the logic here, just use if and in case call the method twice...
-			userContinues = true;
 			userCards.push_back(card);
 			computerCards.erase(computerCards.begin() + cardIndexAtComputerDeck);
 			cardIndexAtComputerDeck = getCardIndex(computerCards, card);
+			continous = true;
+		}
 
+		if (continous)
+		{
+			return true;
 		}
 
 		if (!mainDeck.empty())
@@ -103,17 +109,17 @@ void userTurn(vector<string>& userCards, vector<string>& computerCards, string c
 			userCards.push_back(cardFromMainDeck);
 			mainDeck.pop_back();
 
-			if (cardFromMainDeck == card)
-			{
-				userContinues = true;
-			}
+			return cardFromMainDeck == card;
 		}
 	}
 	else
 	{
-		cout << "You cannot ask for a card that you do not already possess.";
-		return;
+		cout << "Invalid card name. Please enter a card, that you already possess or valid card name.";
+		isTheTurnValid = false;
+		return true;
 	}
+
+	return false;
 }
 
 
@@ -212,17 +218,39 @@ void startGame()
 	{
 		if (turn)
 		{
-			cout << "It's your turn to ask your opponent for a card: ";
-			string card;
-			cin >> card;
-
-			bool userContinues = false;
-			userTurn(userCards, compCards, card, mainDeck, userContinues);
-
-			if (userContinues)
+			while (true)
 			{
-				cout << "Great, you have received the card you wanted, it is you turn again!..." << endl;
+				cout << "Ask your opponent for a card: ";
+				string card;
+				cin >> card;
+
+				bool isTheTurnValid = true;
+				bool result = userTurn(userCards, compCards, card, mainDeck, isTheTurnValid);
+
+				if (isTheTurnValid == false)
+				{
+					continue;
+				}
+
+				if (result)
+				{
+					cout << "Your opponent gives you all the [" << card << "], he got" << "!\n";
+
+					cout << "Great, you have received the card you wanted, it is your turn again!..." << endl;
+				}
+				else
+				{
+					cout << "Nice try, but you didn't get the card you wanted..." << endl;
+					cout << "You got [" << userCards.back() << "] from the main deck...";
+					cout << "Your turn is over..." << endl;
+					turn = !turn;
+					break;
+				}
 			}
+		}
+		else
+		{
+
 		}
 	}
 }
