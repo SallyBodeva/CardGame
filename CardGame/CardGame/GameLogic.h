@@ -8,7 +8,6 @@ using std::vector;
 void initialiseGame(vector<string>& mainDeckOfCars, vector<string>& userCards, vector<string>& computerCards);
 void printDeck(vector<string>& deck);
 void shuffleDeck(vector<string>& deck);
-bool changeTurn(bool previousTurn);
 
 bool isTheAskingValid(vector<string>& cards, string card);
 bool userTurn(vector<string>& userCards, vector<string>& computerCards, string card, vector<string>& mainDeck, bool& isTheTurnValid);

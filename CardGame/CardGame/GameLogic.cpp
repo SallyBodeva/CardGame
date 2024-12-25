@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "GameLogic.h"
+#include "GameLogicPart2.h"
 #include "Constants.h"
 
 
@@ -51,10 +52,6 @@ void initialiseGame(vector<string>& mainDeckOfCars, vector<string>& userCards, v
 	}
 }
 
-bool changeTurn(bool previousTurn) {
-
-	return !previousTurn;
-}
 
 int getCardIndex(vector<string>& deck, string card) {
 
@@ -330,4 +327,6 @@ void startGame()
 			}
 		}
 	}
+
+	startPart2(userPutDownCards,compPutDownCards);
 }

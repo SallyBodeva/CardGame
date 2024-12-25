@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "GameLogic.h"
+#include "GameLogicPart2.h"
 #include "Constants.h"
 
 
@@ -13,32 +14,5 @@ using std::vector;
 
 int main()
 {
-
 	startGame();
-
-	/*vector<string> teste;
-	vector<string> userCards;
-	vector<string> compCards;
-
-	initialiseGame(teste,userCards,compCards);
-
-	ptintDeck(userCards);
-
-	cout << "------------------" << endl;
-
-	ptintDeck(compCards);
-
-
-	bool compCon = false;
-	compTurn(userCards,compCards,teste,compCon);
-
-	cout << "------------------" << endl;
-
-	ptintDeck(userCards);
-
-	cout << "------------------" << endl;
-
-	ptintDeck(compCards);
-	
-	return 0;*/
 }
