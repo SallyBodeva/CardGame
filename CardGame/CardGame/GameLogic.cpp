@@ -123,37 +123,50 @@ bool userTurn(vector<string>& userCards, vector<string>& computerCards, string c
 }
 
 
-void compTurn(vector<string>& userCards, vector<string>& computerCards, vector<string>& mainDeck, bool& compContinues) {
+bool compTurn(vector<string>& userCards, vector<string>& computerCards, vector<string>& mainDeck, string& requestedCard) {
 
 	srand(time(0));
 	int randomCardIndex = rand() % computerCards.size();
-	string wantedCard = userCards[randomCardIndex];
-	int cardIndexAtUserDeck = getCardIndex(userCards, wantedCard);
+	requestedCard = computerCards[randomCardIndex]; 
 
-	compContinues = false;
+	cout << "Your opponent asks for [" << requestedCard << "]. Do you have it? (yes/no): " << endl;
+	cout << '\n';
+	printDeck(userCards);
+	cout << '\n';
 
-	while (cardIndexAtUserDeck != -1)
-	{
-		compContinues = true;
-		computerCards.push_back(wantedCard);
-		userCards.erase(userCards.begin() + cardIndexAtUserDeck);
+	string response;
+	cin >> response;
 
-		cardIndexAtUserDeck = getCardIndex(userCards, wantedCard);
-	}
+	bool continuousTurn = false; 
 
-	if (!mainDeck.empty())
-	{
-		string cardFromMainDeck = mainDeck.back();
+	if (response == "yes") {
+		int cardIndexAtUserDeck = getCardIndex(userCards, requestedCard);
+		while (cardIndexAtUserDeck != -1) {
+			continuousTurn = true; 
 
-		userCards.push_back(cardFromMainDeck);
-		mainDeck.pop_back();
-
-		if (cardFromMainDeck == wantedCard)
-		{
-			compContinues = true;
+			computerCards.push_back(requestedCard);
+			userCards.erase(userCards.begin() + cardIndexAtUserDeck);
+			cardIndexAtUserDeck = getCardIndex(userCards, requestedCard);
 		}
 	}
+	else {
+		cout << "You deny having the card." << endl;
+
+		if (!mainDeck.empty()) {
+			string cardFromMainDeck = mainDeck.back();
+			mainDeck.pop_back();
+			computerCards.push_back(cardFromMainDeck);
+
+			if (cardFromMainDeck == requestedCard) {
+				continuousTurn = true; 
+			}
+		}
+	}
+
+	return continuousTurn; 
 }
+
+
 
 bool hasFourCards(vector<string>& cards, string card, vector<string>& removedSets) {
 
@@ -189,7 +202,7 @@ bool hasFourCards(vector<string>& cards, string card, vector<string>& removedSet
 
 
 void printDeck(vector<string>& deck) {
-	cout << "Deck of Cards:" << endl;
+	cout << "My deck of Cards:" << endl;
 	cout << "===================" << endl;
 
 	for (size_t i = 0; i < deck.size(); i++) {
@@ -237,20 +250,47 @@ void startGame()
 					cout << "Your opponent gives you all the [" << card << "], he got" << "!\n";
 
 					cout << "Great, you have received the card you wanted, it is your turn again!..." << endl;
+					cout << '\n';
+					printDeck(userCards);
+					cout << '\n';
 				}
 				else
 				{
 					cout << "Nice try, but you didn't get the card you wanted..." << endl;
 					cout << "You got [" << userCards.back() << "] from the main deck...";
 					cout << "Your turn is over..." << endl;
+
+					cout << '\n';
 					turn = !turn;
 					break;
 				}
+
+				cout << '\n';
 			}
 		}
 		else
 		{
+			while (true) {
+				string requestedCard;
+				bool compContinues = false;
 
+				compTurn(userCards, compCards, mainDeck, requestedCard);
+
+				if (compContinues) 
+				{
+					cout << "The computer got the cards it wanted. Its turn continues...\n";
+				}
+
+				else 
+				{
+					cout << "The computer didn't get the card it wanted.\n";
+					cout << "Its turn is over...\n" << endl;
+					turn = !turn;
+					break;
+				}
+
+				cout << '\n';
+			}
 		}
 	}
 }
