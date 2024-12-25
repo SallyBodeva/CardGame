@@ -168,7 +168,7 @@ bool compTurn(vector<string>& userCards, vector<string>& computerCards, vector<s
 
 
 
-bool hasFourCards(vector<string>& cards, string card, vector<string>& removedSets) {
+bool playerHasFourCards(vector<string>& cards, string card) {
 
 	int cardCount = 0;
 
@@ -181,23 +181,27 @@ bool hasFourCards(vector<string>& cards, string card, vector<string>& removedSet
 	}
 	if (cardCount == CARD_IN_A_SET)
 	{
-
-		for (int i = 0; i < cards.size(); i++)
-		{
-			if (cards[i] == card)
-			{
-				cards.erase(cards.begin() + i);
-			}
-			else
-			{
-				i++;
-			}
-		}
-
-		removedSets.push_back(card);
 		return true;
 	}
 	return false;
+}
+
+void putDownFullSet(vector<string> playersCards, vector<string> putDownSet, string card ) {
+
+	putDownSet.push_back(card);
+
+	for (int i = 0; i < playersCards.size(); i++)
+	{
+		if (playersCards[i] == card)
+		{
+			playersCards.erase(playersCards.begin() + i);
+		}
+		else
+		{
+			i++;
+		}
+	}
+
 }
 
 
@@ -212,11 +216,15 @@ void printDeck(vector<string>& deck) {
 	cout << "===================" << endl;
 }
 
+
 void startGame()
 {
 	vector<string> mainDeck;
 	vector<string> userCards;
 	vector<string> compCards;
+
+	vector<string> userPutDownCards;
+	vector<string> compPutDownCards;
 
 	cout << "Dealing cards....\n\n";
 
@@ -265,8 +273,18 @@ void startGame()
 					break;
 				}
 
+				cout << "Do you have a set of 4 identical cards? (yes/no): " << endl;
+
+				string response;
+				cin >> response;
+
+				if (response == "yes")
+				{
+					putDownFullSet(userCards, userPutDownCards, card);
+				}
 				cout << '\n';
 			}
+			// So much more work here to get  done......
 		}
 		else
 		{
