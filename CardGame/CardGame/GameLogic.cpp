@@ -186,7 +186,7 @@ bool playerHasFourCards(vector<string>& cards, string card) {
 	return false;
 }
 
-void putDownFullSet(vector<string> playersCards, vector<string> putDownSet, string card) {
+void putDownFullSet(vector<string>& playersCards, vector<string>& putDownSet, string card) {
 
 	putDownSet.push_back(card);
 
@@ -204,6 +204,32 @@ void putDownFullSet(vector<string> playersCards, vector<string> putDownSet, stri
 
 }
 
+void checkAndHandleFullSet(bool isComputer, vector<string>& playerCards, vector<string>& putDownSet) {
+
+	for (int i = 0; i < playerCards.size(); i++)
+	{
+		string card = playerCards[i];
+
+		if (playerHasFourCards(playerCards, card)) {
+			if (isComputer) {
+				cout << "Computer has collected a set of [" << card << "] and puts it down.\n";
+				putDownFullSet(playerCards, putDownSet, card);
+			}
+			else {
+				cout << "You have a set of [" << card << "]. Please put it down manually.\n";
+				cout << "Do you want to put it down? (yes/no): ";
+				string response;
+				cin >> response;
+				if (response == "yes") {
+					putDownFullSet(playerCards, putDownSet, card);
+				}
+				else {
+					cout << "You chose not to put down the set.\n";
+				}
+			}
+		}
+	}
+}
 
 void printDeck(vector<string>& deck) {
 	cout << "My deck of Cards:" << endl;
@@ -215,7 +241,6 @@ void printDeck(vector<string>& deck) {
 
 	cout << "===================" << endl;
 }
-
 
 void startGame()
 {
@@ -270,21 +295,13 @@ void startGame()
 
 					cout << '\n';
 					turn = !turn;
+
+					checkAndHandleFullSet(false, userCards, userPutDownCards);
 					break;
 				}
 
-				cout << "Do you have a set of 4 identical cards? (yes/no): " << endl;
-
-				string response;
-				cin >> response;
-
-				if (response == "yes")
-				{
-					putDownFullSet(userCards, userPutDownCards, card);
-				}
-				cout << '\n';
+				checkAndHandleFullSet(false, userCards, userPutDownCards);
 			}
-			// So much more work here to get  done......
 		}
 		else
 		{
@@ -304,10 +321,12 @@ void startGame()
 					cout << "The computer didn't get the card it wanted.\n";
 					cout << "Its turn is over...\n" << endl;
 					turn = !turn;
+					checkAndHandleFullSet(true, compCards, compPutDownCards);
 					break;
 				}
 
 				cout << '\n';
+				checkAndHandleFullSet(true, compCards, compPutDownCards);
 			}
 		}
 	}
