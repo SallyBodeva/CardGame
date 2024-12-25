@@ -127,7 +127,7 @@ bool compTurn(vector<string>& userCards, vector<string>& computerCards, vector<s
 
 	srand(time(0));
 	int randomCardIndex = rand() % computerCards.size();
-	requestedCard = computerCards[randomCardIndex]; 
+	requestedCard = computerCards[randomCardIndex];
 
 	cout << "Your opponent asks for [" << requestedCard << "]. Do you have it? (yes/no): " << endl;
 	cout << '\n';
@@ -137,12 +137,12 @@ bool compTurn(vector<string>& userCards, vector<string>& computerCards, vector<s
 	string response;
 	cin >> response;
 
-	bool continuousTurn = false; 
+	bool continuousTurn = false;
 
 	if (response == "yes") {
 		int cardIndexAtUserDeck = getCardIndex(userCards, requestedCard);
 		while (cardIndexAtUserDeck != -1) {
-			continuousTurn = true; 
+			continuousTurn = true;
 
 			computerCards.push_back(requestedCard);
 			userCards.erase(userCards.begin() + cardIndexAtUserDeck);
@@ -158,12 +158,12 @@ bool compTurn(vector<string>& userCards, vector<string>& computerCards, vector<s
 			computerCards.push_back(cardFromMainDeck);
 
 			if (cardFromMainDeck == requestedCard) {
-				continuousTurn = true; 
+				continuousTurn = true;
 			}
 		}
 	}
 
-	return continuousTurn; 
+	return continuousTurn;
 }
 
 
@@ -186,7 +186,7 @@ bool playerHasFourCards(vector<string>& cards, string card) {
 	return false;
 }
 
-void putDownFullSet(vector<string> playersCards, vector<string> putDownSet, string card ) {
+void putDownFullSet(vector<string> playersCards, vector<string> putDownSet, string card) {
 
 	putDownSet.push_back(card);
 
@@ -290,16 +290,16 @@ void startGame()
 		{
 			while (true) {
 				string requestedCard;
-				bool compContinues = false;
 
-				compTurn(userCards, compCards, mainDeck, requestedCard);
+				bool result = compTurn(userCards, compCards, mainDeck, requestedCard);
 
-				if (compContinues) 
+				if (result)
 				{
-					cout << "The computer got the cards it wanted. Its turn continues...\n";
+					cout << "The computer got the cards it wanted";
+					cout << "Its turn continues...\n";
 				}
 
-				else 
+				else
 				{
 					cout << "The computer didn't get the card it wanted.\n";
 					cout << "Its turn is over...\n" << endl;
