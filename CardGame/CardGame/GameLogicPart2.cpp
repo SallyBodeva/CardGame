@@ -45,6 +45,8 @@ void clearScreen() {
 
 void startPart2(vector<string>& userSets, vector<string>& compSets) {
 
+	const vector<string> validCardTypes = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "A", "J", "Q", "K" };
+
 	srand(time(0));
 	bool turn = USER_TURN;
 	while ((!userSets.empty()) && (!compSets.empty()))
@@ -69,6 +71,10 @@ void startPart2(vector<string>& userSets, vector<string>& compSets) {
 				{
 					opponentGivesTheSet(userSets, compSets, cardType);
 					cout << "Great you guessed a card set your opponent had." << endl;
+					if (compSets.empty())
+					{
+						break;
+					}
 					cout << "It's your turn again!";
 				}
 				else
@@ -82,16 +88,13 @@ void startPart2(vector<string>& userSets, vector<string>& compSets) {
 		}
 		else
 		{
-			int randomSetIndex = rand() % compSets.size();
-			string requestedSet = compSets[randomSetIndex];
+			int randomSetIndex = rand() % validCardTypes.size();
+			string requestedSet = validCardTypes[randomSetIndex];
 			cout << "Your opponent asks for [" << requestedSet << "]. Do you have it? (yes/no): ";
 
 			cout << '\n';
 
 			printDeck(userSets);
-
-			string response;
-			cin >> response;
 
 			bool hasCard = validateYesNoResponse();
 

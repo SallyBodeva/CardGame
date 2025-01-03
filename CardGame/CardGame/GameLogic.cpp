@@ -83,11 +83,16 @@ bool isTheAskingValid(vector<string>& cards, string card) {
 
 string drawFromTheMainDeck(vector<string>& playersCards, vector<string>& mainDeck) {
 
-	string cardFromMainDeck = mainDeck.back();
-	playersCards.push_back(cardFromMainDeck);
-	mainDeck.pop_back();
+	if (!mainDeck.empty())
+	{
+		string cardFromMainDeck = mainDeck.back();
+		playersCards.push_back(cardFromMainDeck);
+		mainDeck.pop_back();
 
-	return cardFromMainDeck;
+		return cardFromMainDeck;
+	}
+
+	return "";
 }
 
 bool userTurn(vector<string>& userCards, vector<string>& computerCards, string card, vector<string>& mainDeck) {
@@ -240,12 +245,9 @@ void checkAndHandleFullSetUser(vector<string>& userCards, vector<string>& userPu
 
 	printDeck(userCards);
 
-	string response;
-	cin >> response;
+	bool response = validateYesNoResponse();
 
-	toLower(response);
-
-	if (response == "yes")
+	if (response)
 	{
 		cout << "Enter the card type you want to put down (e.g., A, 2, J, etc.): ";
 		string card;
@@ -256,11 +258,8 @@ void checkAndHandleFullSetUser(vector<string>& userCards, vector<string>& userPu
 		checkUserFullSet(userCards, userPutDownCards, card, true);
 		cout << "You successfully put down a full set of [" << card << "]!\n";
 	}
-	else if (response == "no") {
-		cout << "Okay, moving on to the next turn.\n";
-	}
 	else {
-		cout << "Invalid response. Please answer 'yes' or 'no'.\n";
+		cout << "Okay, moving on to the next turn.\n";
 	}
 }
 
@@ -286,7 +285,10 @@ void startGame() {
 	cout << "Welcome to the card game!\n";
 
 	bool turn = USER_TURN;
-	while (!mainDeck.empty()) {
+
+	int totalCards = userPutDownCards.size() + compPutDownCards.size();
+
+	while (!mainDeck.empty() && totalCards !=  COUNT_OF_CARDS_TYPES) {
 		if (turn) {
 			cout << "\n--- Your Turn ---\n";
 			while (true) {
@@ -294,17 +296,24 @@ void startGame() {
 				if (userCards.empty())
 				{
 					cout << "Your deck is empty, you should draw a card.";
-					string card = drawFromTheMainDeck(userCards,mainDeck);
-					cout << "You drew: [" << card << "]\n";
-					cout << "Your turn is over.\n";
-					turn = !turn;
+					string card = drawFromTheMainDeck(userCards, mainDeck);
+					if (card != "")
+					{
+						cout << "You drew: [" << card << "]\n";
+						cout << "Your turn is over.\n";
+						turn = !turn;
+					}
+					else
+					{
+						cout << "The main deck is empty...";
+					}
 					break;
 				}
 				printDeck(userCards);
 				cout << "Enter the name of a card to ask your opponent for: ";
 				string card;
 				cin >> card;
-	
+
 				while (!isValidCardType(card)) {
 					cout << "Invalid card type. Please enter a valid card type: ";
 					continue;
