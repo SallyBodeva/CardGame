@@ -7,6 +7,7 @@
 #include "GameLogicPart2.h"
 #include "GameLogic.h"
 #include "Constants.h"
+#include "HelperFunctions.h"
 
 
 using namespace std;
@@ -59,6 +60,11 @@ void startPart2(vector<string>& userSets, vector<string>& compSets) {
 
 				cin >> cardType;
 
+				while (!isValidCardType(cardType)) {
+					cout << "Invalid card type. Please enter a valid card type from your set: ";
+					cin >> cardType;
+				}
+
 				if (doesOpponentHaveIt(userSets, compSets, cardType))
 				{
 					opponentGivesTheSet(userSets, compSets, cardType);
@@ -87,7 +93,9 @@ void startPart2(vector<string>& userSets, vector<string>& compSets) {
 			string response;
 			cin >> response;
 
-			if (response == "yes")
+			bool hasCard = validateYesNoResponse();
+
+			if (hasCard)
 			{
 				opponentGivesTheSet(compSets, userSets, requestedSet);
 			}
@@ -104,7 +112,7 @@ void startPart2(vector<string>& userSets, vector<string>& compSets) {
 
 	}
 
-	if (userSets.empty()) {
+	if (compSets.empty()) {
 		cout << "Congratulations! You've won the game!\n";
 	}
 	else {

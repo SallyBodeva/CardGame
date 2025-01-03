@@ -6,6 +6,7 @@
 #include "GameLogic.h"
 #include "GameLogicPart2.h"
 #include "Constants.h"
+#include "HelperFunctions.h"
 
 
 using namespace std;

@@ -6,6 +6,7 @@
 #include "GameLogic.h"
 #include "GameLogicPart2.h"
 #include "Constants.h"
+#include "HelperFunctions.h"
 
 
 using namespace std;
@@ -242,12 +243,16 @@ void checkAndHandleFullSetUser(vector<string>& userCards, vector<string>& userPu
 	string response;
 	cin >> response;
 
+	toLower(response);
 
 	if (response == "yes")
 	{
 		cout << "Enter the card type you want to put down (e.g., A, 2, J, etc.): ";
 		string card;
 		cin >> card;
+
+		toUpper(card);
+
 		checkUserFullSet(userCards, userPutDownCards, card, true);
 		cout << "You successfully put down a full set of [" << card << "]!\n";
 	}
@@ -299,6 +304,11 @@ void startGame() {
 				cout << "Enter the name of a card to ask your opponent for: ";
 				string card;
 				cin >> card;
+	
+				while (!isValidCardType(card)) {
+					cout << "Invalid card type. Please enter a valid card type: ";
+					continue;
+				}
 
 				if (!isTheAskingValid(userCards, card)) {
 					cout << "Invalid choice. Please choose a card you already have.\n";
@@ -339,10 +349,9 @@ void startGame() {
 
 				printDeck(userCards);
 
-				string response;
-				cin >> response;
+				bool hasCard = validateYesNoResponse();
 
-				bool result = response == "yes"
+				bool result = hasCard
 					? compTurn(userCards, compCards, mainDeck, requestedCard, true)
 					: compTurn(userCards, compCards, mainDeck, requestedCard, false);
 
