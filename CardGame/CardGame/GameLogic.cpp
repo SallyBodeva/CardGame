@@ -288,27 +288,29 @@ void startGame() {
 
 	int totalCards = userPutDownCards.size() + compPutDownCards.size();
 
-	while (!mainDeck.empty() && totalCards !=  COUNT_OF_CARDS_TYPES) {
+	while ((userCards.size() > 0 || mainDeck.size() > 0) && (compCards.size() > 0 || mainDeck.size() > 0) && totalCards != COUNT_OF_CARDS_TYPES) {
+
 		if (turn) {
 			cout << "\n--- Your Turn ---\n";
 			while (true) {
 
-				if (userCards.empty())
-				{
-					cout << "Your deck is empty, you should draw a card.";
-					string card = drawFromTheMainDeck(userCards, mainDeck);
-					if (card != "")
-					{
-						cout << "You drew: [" << card << "]\n";
-						cout << "Your turn is over.\n";
-						turn = !turn;
+				if (userCards.empty()) {
+					if (mainDeck.empty()) {
+						cout << "You have no cards left and the main deck is empty. The game is over!\n";
+						break; 
 					}
-					else
-					{
-						cout << "The main deck is empty...";
+					else {
+						cout << "Your deck is empty, drawing a card...\n";
+						string card = drawFromTheMainDeck(userCards, mainDeck);
+						if (!card.empty()) {
+							cout << "You drew: [" << card << "]\n";
+						}
+						else {
+							cout << "The main deck is empty...\n";
+						}
 					}
-					break;
 				}
+
 				printDeck(userCards);
 				cout << "Enter the name of a card to ask your opponent for: ";
 				string card;
@@ -345,13 +347,23 @@ void startGame() {
 			cout << "\n--- Computer's Turn ---\n";
 			while (true) {
 
-				if (compCards.empty())
-				{
-					string card = drawFromTheMainDeck(compCards, mainDeck);
-					cout << "Your opponent got no cards, he can only draw from the main deck.Its turn is over.\n";
-					turn = !turn;
-					break;
+				if (compCards.empty()) {
+					if (mainDeck.empty()) {
+						cout << "The computer has no cards left and the main deck is empty. The game is over!\n";
+						break; 
+					}
+					else {
+						cout << "The computer's deck is empty. It draws a card...\n";
+						string card = drawFromTheMainDeck(compCards, mainDeck);
+						if (!card.empty()) {
+							cout << "The computer drew a card.\n";
+						}
+						else {
+							cout << "The main deck is empty...\n";
+						}
+					}
 				}
+
 				string requestedCard = getRequestedCardForCompTurn(compCards);
 				cout << "The computer asks for [" << requestedCard << "].\n";
 				cout << "Do you have this card? (yes/no): ";
