@@ -80,63 +80,61 @@ bool isTheAskingValid(vector<string>& cards, string card) {
 	return false;
 }
 
-bool userTurn(vector<string>& userCards, vector<string>& computerCards, string card, vector<string>& mainDeck, bool& isTheTurnValid) {
+string drawFromTheMainDeck(vector<string>& playersCards, vector<string>& mainDeck) {
+
+	string cardFromMainDeck = mainDeck.back();
+	playersCards.push_back(cardFromMainDeck);
+	mainDeck.pop_back();
+
+	return cardFromMainDeck;
+}
+
+bool userTurn(vector<string>& userCards, vector<string>& computerCards, string card, vector<string>& mainDeck) {
 
 	bool continous = false;
-	if (isTheAskingValid(userCards, card))
+
+	int cardIndexAtComputerDeck = getCardIndex(computerCards, card);
+	while (cardIndexAtComputerDeck != -1)
 	{
-		int cardIndexAtComputerDeck = getCardIndex(computerCards, card);
-		while (cardIndexAtComputerDeck != -1)
-		{
-			userCards.push_back(card);
-			computerCards.erase(computerCards.begin() + cardIndexAtComputerDeck);
-			cardIndexAtComputerDeck = getCardIndex(computerCards, card);
-			continous = true;
-		}
-
-		if (continous)
-		{
-			return true;
-		}
-
-		if (!mainDeck.empty())
-		{
-			string cardFromMainDeck = mainDeck.back();
-
-			userCards.push_back(cardFromMainDeck);
-			mainDeck.pop_back();
-
-			return cardFromMainDeck == card;
-		}
+		userCards.push_back(card);
+		computerCards.erase(computerCards.begin() + cardIndexAtComputerDeck);
+		cardIndexAtComputerDeck = getCardIndex(computerCards, card);
+		continous = true;
 	}
-	else
+
+	if (continous)
 	{
-		cout << "Invalid card name. Please enter a card, that you already possess or valid card name.";
-		isTheTurnValid = false;
 		return true;
+	}
+
+	if (!mainDeck.empty())
+	{
+		string cardFromMainDeck = mainDeck.back();
+
+		userCards.push_back(cardFromMainDeck);
+		mainDeck.pop_back();
+
+		return cardFromMainDeck == card;
 	}
 
 	return false;
 }
 
 
-bool compTurn(vector<string>& userCards, vector<string>& computerCards, vector<string>& mainDeck, string& requestedCard) {
+string getRequestedCardForCompTurn(vector<string>& computerCards) {
 
 	srand(time(0));
 	int randomCardIndex = rand() % computerCards.size();
-	requestedCard = computerCards[randomCardIndex];
+	string requestedCard = computerCards[randomCardIndex];
 
-	cout << "Your opponent asks for [" << requestedCard << "]. Do you have it? (yes/no): " << endl;
-	cout << '\n';
-	printDeck(userCards);
-	cout << '\n';
+	return requestedCard;
+}
 
-	string response;
-	cin >> response;
+bool compTurn(vector<string>& userCards, vector<string>& computerCards, vector<string>& mainDeck, string& requestedCard, bool response) {
 
 	bool continuousTurn = false;
 
-	if (response == "yes") {
+	if (response) {
 		int cardIndexAtUserDeck = getCardIndex(userCards, requestedCard);
 		while (cardIndexAtUserDeck != -1) {
 			continuousTurn = true;
@@ -147,7 +145,6 @@ bool compTurn(vector<string>& userCards, vector<string>& computerCards, vector<s
 		}
 	}
 	else {
-		cout << "You deny having the card." << endl;
 
 		if (!mainDeck.empty()) {
 			string cardFromMainDeck = mainDeck.back();
@@ -187,49 +184,46 @@ void putDownFullSet(vector<string>& playersCards, vector<string>& putDownSet, st
 
 	putDownSet.push_back(card);
 
-	for (int i = 0; i < playersCards.size(); i++)
-	{
-		if (playersCards[i] == card)
-		{
+	for (int i = 0; i < playersCards.size();) {
+		if (playersCards[i] == card) {
 			playersCards.erase(playersCards.begin() + i);
 		}
-		else
-		{
+		else {
 			i++;
 		}
 	}
 
 }
 
-void checkAndHandleFullSet(bool isComputer, vector<string>& playerCards, vector<string>& putDownSet) {
+bool checkCompFullSet(vector<string>& playerCards, vector<string>& putDownSet) {
 
 	for (int i = 0; i < playerCards.size(); i++)
 	{
 		string card = playerCards[i];
 
-		if (playerHasFourCards(playerCards, card)) {
-			if (isComputer) {
-				cout << "Computer has collected a set of [" << card << "] and puts it down.\n";
-				putDownFullSet(playerCards, putDownSet, card);
-			}
-			else {
-				cout << "You have a set of [" << card << "]. Please put it down manually.\n";
-				cout << "Do you want to put it down? (yes/no): ";
-				string response;
-				cin >> response;
-				if (response == "yes") {
-					putDownFullSet(playerCards, putDownSet, card);
-				}
-				else {
-					cout << "You chose not to put down the set.\n";
-				}
-			}
+		if (playerHasFourCards(playerCards, card))
+		{
+			putDownFullSet(playerCards, putDownSet, card);
+			return  true;
 		}
 	}
+
+	return false;
+}
+
+
+bool checkUserFullSet(vector<string>& playerCards, vector<string>& putDownSet, string card, bool response) {
+
+	if (response) {
+		putDownFullSet(playerCards, putDownSet, card);
+		return true;
+	}
+	return false;
+
 }
 
 void printDeck(vector<string>& deck) {
-	cout << "My deck of Cards:" << endl;
+	cout << "Your deck of Cards:" << endl;
 	cout << "===================" << endl;
 
 	for (size_t i = 0; i < deck.size(); i++) {
@@ -239,94 +233,134 @@ void printDeck(vector<string>& deck) {
 	cout << "===================" << endl;
 }
 
-void startGame()
+void checkAndHandleFullSetUser(vector<string>& userCards, vector<string>& userPutDownCards)
 {
+	cout << "Do you have a full set of a card type to put it down? (yes/no)" << endl;
+
+	printDeck(userCards);
+
+	string response;
+	cin >> response;
+
+
+	if (response == "yes")
+	{
+		cout << "Enter the card type you want to put down (e.g., A, 2, J, etc.): ";
+		string card;
+		cin >> card;
+		checkUserFullSet(userCards, userPutDownCards, card, true);
+		cout << "You successfully put down a full set of [" << card << "]!\n";
+	}
+	else if (response == "no") {
+		cout << "Okay, moving on to the next turn.\n";
+	}
+	else {
+		cout << "Invalid response. Please answer 'yes' or 'no'.\n";
+	}
+}
+
+void handleFullSetComp(vector<string>& compCards, vector<string>& compPutDownCards)
+{
+	bool result = checkCompFullSet(compCards, compPutDownCards);
+	if (result)
+	{
+		cout << "Computer has collected a full set and puts it down.\n";
+	}
+}
+
+void startGame() {
 	vector<string> mainDeck;
 	vector<string> userCards;
 	vector<string> compCards;
-
 	vector<string> userPutDownCards;
 	vector<string> compPutDownCards;
 
 	cout << "Dealing cards....\n\n";
-
 	initialiseGame(mainDeck, userCards, compCards);
 
-	cout << "You have these cards: " << endl;
-
-	printDeck(userCards);
+	cout << "Welcome to the card game!\n";
 
 	bool turn = USER_TURN;
-	while (!mainDeck.empty())
-	{
-		if (turn)
-		{
-			while (true)
-			{
-				cout << "Ask your opponent for a card: ";
+	while (!mainDeck.empty()) {
+		if (turn) {
+			cout << "\n--- Your Turn ---\n";
+			while (true) {
+
+				if (userCards.empty())
+				{
+					cout << "Your deck is empty, you should draw a card.";
+					string card = drawFromTheMainDeck(userCards,mainDeck);
+					cout << "You drew: [" << card << "]\n";
+					cout << "Your turn is over.\n";
+					turn = !turn;
+					break;
+				}
+				printDeck(userCards);
+				cout << "Enter the name of a card to ask your opponent for: ";
 				string card;
 				cin >> card;
 
-				bool isTheTurnValid = true;
-				bool result = userTurn(userCards, compCards, card, mainDeck, isTheTurnValid);
-
-				if (isTheTurnValid == false)
-				{
+				if (!isTheAskingValid(userCards, card)) {
+					cout << "Invalid choice. Please choose a card you already have.\n";
 					continue;
 				}
 
-				if (result)
-				{
-					cout << "Your opponent gives you all the [" << card << "], he got" << "!\n";
-
-					cout << "Great, you have received the card you wanted, it is your turn again!..." << endl;
-					cout << '\n';
-					printDeck(userCards);
-					cout << '\n';
+				bool result = userTurn(userCards, compCards, card, mainDeck);
+				if (result) {
+					cout << "You got all the [" << card << "] cards from your opponent!\n";
+					cout << "Your turn continues...\n";
 				}
-				else
-				{
-					cout << "Nice try, but you didn't get the card you wanted..." << endl;
-					cout << "You got [" << userCards.back() << "] from the main deck...";
-					cout << "Your turn is over..." << endl;
-
-					cout << '\n';
+				else {
+					cout << "You did not get the card. Drawing a card from the deck...\n";
+					cout << "You drew: [" << userCards.back() << "]\n";
+					cout << "Your turn is over.\n";
 					turn = !turn;
-
-					checkAndHandleFullSet(false, userCards, userPutDownCards);
+					checkAndHandleFullSetUser(userCards, userPutDownCards);
 					break;
 				}
 
-				checkAndHandleFullSet(false, userCards, userPutDownCards);
+				checkAndHandleFullSetUser(userCards, userPutDownCards);
 			}
 		}
-		else
-		{
+		else {
+			cout << "\n--- Computer's Turn ---\n";
 			while (true) {
-				string requestedCard;
 
-				bool result = compTurn(userCards, compCards, mainDeck, requestedCard);
-
-				if (result)
+				if (compCards.empty())
 				{
-					cout << "The computer got the cards it wanted";
-					cout << "Its turn continues...\n";
-				}
-
-				else
-				{
-					cout << "The computer didn't get the card it wanted.\n";
-					cout << "Its turn is over...\n" << endl;
+					string card = drawFromTheMainDeck(compCards, mainDeck);
+					cout << "Your opponent got no cards, he can only draw from the main deck.Its turn is over.\n";
 					turn = !turn;
-					checkAndHandleFullSet(true, compCards, compPutDownCards);
+					break;
+				}
+				string requestedCard = getRequestedCardForCompTurn(compCards);
+				cout << "The computer asks for [" << requestedCard << "].\n";
+				cout << "Do you have this card? (yes/no): ";
+
+				printDeck(userCards);
+
+				string response;
+				cin >> response;
+
+				bool result = response == "yes"
+					? compTurn(userCards, compCards, mainDeck, requestedCard, true)
+					: compTurn(userCards, compCards, mainDeck, requestedCard, false);
+
+				if (result) {
+					cout << "The computer got the cards it wanted. Its turn continues...\n";
+				}
+				else {
+					cout << "The computer did not get the card it wanted. Its turn is over.\n";
+					turn = !turn;
+					handleFullSetComp(compCards, compPutDownCards);
 					break;
 				}
 
-				cout << '\n';
-				checkAndHandleFullSet(true, compCards, compPutDownCards);
+				handleFullSetComp(compCards, compPutDownCards);
 			}
 		}
 	}
 
-	startPart2(userPutDownCards,compPutDownCards);
+	cout << "\nGame Over! Moving to the next phase...\n";
+	startPart2(userPutDownCards, compPutDownCards);
 }
