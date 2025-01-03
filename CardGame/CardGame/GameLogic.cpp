@@ -330,7 +330,7 @@ void handleUserTurn(vector<string>& userCards, vector<string>& compCards, vector
 
 		while (!isValidCardType(card)) {
 			cout << "Invalid card type. Please enter a valid card type: ";
-			continue;
+			cin >> card;
 		}
 
 		if (!isTheAskingValid(userCards, card)) {
