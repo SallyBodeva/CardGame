@@ -228,6 +228,8 @@ bool checkUserFullSet(vector<string>& playerCards, vector<string>& putDownSet, s
 
 }
 
+
+
 void printDeck(vector<string>& deck) {
 	cout << "Your deck of Cards:" << endl;
 	cout << "===================" << endl;
@@ -241,6 +243,7 @@ void printDeck(vector<string>& deck) {
 
 void checkAndHandleFullSetUser(vector<string>& userCards, vector<string>& userPutDownCards)
 {
+	cout << "\n";
 	cout << "Do you have a full set of a card type to put it down? (yes/no)" << endl;
 
 	printDeck(userCards);
@@ -249,6 +252,7 @@ void checkAndHandleFullSetUser(vector<string>& userCards, vector<string>& userPu
 
 	if (response)
 	{
+		cout << "\n";
 		cout << "Enter the card type you want to put down (e.g., A, 2, J, etc.): ";
 		string card;
 		cin >> card;
@@ -259,6 +263,7 @@ void checkAndHandleFullSetUser(vector<string>& userCards, vector<string>& userPu
 		}
 
 		checkUserFullSet(userCards, userPutDownCards, card, true);
+		cout << "\n";
 		cout << "You successfully put down a full set of [" << card << "]!\n";
 	}
 	else {
@@ -295,7 +300,7 @@ void handleUserEmptyDeck(vector<string>& userCards, vector<string>& mainDeck) {
 void handleComputerEmptyDeck(vector<string>& compCards, vector<string>& mainDeck) {
 	if (compCards.empty()) {
 
-		if (mainDeck.empty()) 
+		if (mainDeck.empty())
 		{
 			cout << "The computer has no cards left and the main deck is empty. The game is over!\n";
 		}
@@ -317,7 +322,7 @@ void handleUserTurn(vector<string>& userCards, vector<string>& compCards, vector
 			handleUserEmptyDeck(userCards, mainDeck);
 
 			if (userCards.empty()) {
-				cout << "Your turn is over because the main deck is empty\n";  
+				cout << "Your turn is over because the main deck is empty\n";
 			}
 
 			turn = !turn;
@@ -342,6 +347,7 @@ void handleUserTurn(vector<string>& userCards, vector<string>& compCards, vector
 		}
 
 		bool result = userTurn(userCards, compCards, card, mainDeck);
+		cout << "\n";
 		if (result) {
 			cout << "You got all the [" << card << "] cards from your opponent!\n";
 			cout << "Your turn continues...\n";
@@ -360,11 +366,13 @@ void handleUserTurn(vector<string>& userCards, vector<string>& compCards, vector
 }
 
 void handleComputerTurn(vector<string>& userCards, vector<string>& compCards, vector<string>& mainDeck, vector<string>& userPutDownCards, vector<string>& compPutDownCards, bool& turn) {
-	cout << "\n--- Computer's Turn ---\n";
 	while (true) {
+
+		cout << "\n--- Computer's Turn ---\n";
+
 		if (compCards.empty()) {
 			handleComputerEmptyDeck(compCards, mainDeck);
-		
+
 			if (compCards.empty()) {
 				cout << "The computer's turn is over because the main deck \n";
 			}
@@ -373,6 +381,7 @@ void handleComputerTurn(vector<string>& userCards, vector<string>& compCards, ve
 		}
 
 		string requestedCard = getRequestedCardForCompTurn(compCards);
+		cout << "\n";
 		cout << "The computer asks for [" << requestedCard << "].\n";
 		cout << "Do you have this card? (yes/no): ";
 
@@ -384,6 +393,7 @@ void handleComputerTurn(vector<string>& userCards, vector<string>& compCards, ve
 			? compTurn(userCards, compCards, mainDeck, requestedCard, true)
 			: compTurn(userCards, compCards, mainDeck, requestedCard, false);
 
+		cout << "\n";
 		if (result) {
 			cout << "The computer got the cards it wanted. Its turn continues...\n";
 		}
@@ -400,6 +410,7 @@ void handleComputerTurn(vector<string>& userCards, vector<string>& compCards, ve
 
 
 void startGame() {
+
 	vector<string> mainDeck;
 	vector<string> userCards;
 	vector<string> compCards;
@@ -418,7 +429,7 @@ void startGame() {
 
 		if (userCards.empty() && compCards.empty() && mainDeck.empty()) {
 			cout << "Both players have no cards left, and the main deck is empty. The game is over!\n";
-			break; 
+			break;
 		}
 
 		if (turn) {

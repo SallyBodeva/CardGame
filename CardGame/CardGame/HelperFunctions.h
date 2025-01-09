@@ -10,3 +10,4 @@ void toLower(string& input);
 void toUpper(string& input);
 bool validateYesNoResponse();
 bool isValidCardType(string& cardType);
+void bubbleSort(vector<string>& deck);
