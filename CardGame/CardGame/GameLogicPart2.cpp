@@ -36,12 +36,6 @@ void opponentGivesTheSet(vector<string>& playerSets, vector<string>& opponentSet
 
 }
 
-void clearScreen() {
-
-	for (int i = 0; i < 50; i++) {
-		cout << "\n";
-	}
-}
 
 void startPart2(vector<string>& userSets, vector<string>& compSets) {
 

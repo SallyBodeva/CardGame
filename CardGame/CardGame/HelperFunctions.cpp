@@ -44,6 +44,7 @@ bool validateYesNoResponse() {
 	while (response != "yes" && response != "no") {
 		cout << "Invalid response. Please enter 'yes' or 'no': ";
 		cin >> response;
+		toLower(response);
 	}
 
 	return response == "yes";
@@ -63,22 +64,4 @@ bool isValidCardType(string& cardType) {
 		}
 	}
 	return false;
-}
-
-void bubbleSort(vector<string>& deck) {
-	int n = deck.size();
-
-	for (int i = 0; i < n - 1; ++i) {
-		for (int j = 0; j < n - i - 1; ++j) {
-			
-			int currentCard = stoi(deck[j]);
-			int nextCard = stoi(deck[j + 1]);
-			if (currentCard > nextCard) {
-
-				string temp = deck[j];
-				deck[j] = deck[j + 1];
-				deck[j + 1] = temp;
-			}
-		}
-	}
 }
