@@ -65,3 +65,24 @@ bool isValidCardType(string& cardType) {
 	}
 	return false;
 }
+
+int getCardRank(const string& card) {
+	if (card == "A") return 1;
+	if (card == "J") return 11;
+	if (card == "Q") return 12;
+	if (card == "K") return 13;
+	return stoi(card); 
+}
+
+void bubbleSort(vector<string>& cards) {
+	int n = cards.size();
+	for (int i = 0; i < n - 1; i++) {
+		for (int j = 0; j < n - i - 1; j++) {
+			if (getCardRank(cards[j]) > getCardRank(cards[j + 1])) {
+				string temp = cards[j];
+				cards[j] = cards[j + 1];
+				cards[j + 1] = temp;
+			}
+		}
+	}
+}

@@ -95,7 +95,7 @@ string drawFromTheMainDeck(vector<string>& playersCards, vector<string>& mainDec
 	return "";
 }
 
-bool userTurn(vector<string>& userCards, vector<string>& computerCards, string card, vector<string>& mainDeck) {
+bool userTurn(vector<string>& userCards, vector<string>& computerCards, string card, vector<string>& mainDeck, bool& isItFromMainDeck) {
 
 	bool continous = false;
 
@@ -119,6 +119,11 @@ bool userTurn(vector<string>& userCards, vector<string>& computerCards, string c
 
 		userCards.push_back(cardFromMainDeck);
 		mainDeck.pop_back();
+
+		if (cardFromMainDeck == card)
+		{
+			isItFromMainDeck = true;
+		}
 
 		return cardFromMainDeck == card;
 	}
@@ -150,17 +155,14 @@ bool compTurn(vector<string>& userCards, vector<string>& computerCards, vector<s
 			cardIndexAtUserDeck = getCardIndex(userCards, requestedCard);
 		}
 	}
-	else {
+	else if (!mainDeck.empty()) {
 
-		if (!mainDeck.empty()) {
-			string cardFromMainDeck = mainDeck.back();
-			mainDeck.pop_back();
-			computerCards.push_back(cardFromMainDeck);
+		string cardFromMainDeck = mainDeck.back();
+		mainDeck.pop_back();
+		computerCards.push_back(cardFromMainDeck);
 
-			if (cardFromMainDeck == requestedCard) {
-				continuousTurn = true;
-			}
-		}
+		return cardFromMainDeck == requestedCard;
+
 	}
 
 	return continuousTurn;
@@ -233,6 +235,8 @@ bool checkUserFullSet(vector<string>& playerCards, vector<string>& putDownSet, s
 void printDeck(vector<string>& deck) {
 	cout << "Your deck of Cards:" << endl;
 	cout << "===================" << endl;
+
+	bubbleSort(deck);
 
 	for (size_t i = 0; i < deck.size(); i++) {
 		cout << "*" << "[" << deck[i] << "]" << "*" << endl;
@@ -346,11 +350,19 @@ void handleUserTurn(vector<string>& userCards, vector<string>& compCards, vector
 			continue;
 		}
 
-		bool result = userTurn(userCards, compCards, card, mainDeck);
+		bool isItFromTheMainDeck = false;
+		bool result = userTurn(userCards, compCards, card, mainDeck, isItFromTheMainDeck);
 		cout << "\n";
+
 		if (result) {
 			cout << "You got all the [" << card << "] cards from your opponent!\n";
 			cout << "Your turn continues...\n";
+		}
+		else if(isItFromTheMainDeck)
+		{
+			cout << "You did not get the card from your opponent.  Drawing a card from the deck...\n";
+			cout << "You drew: [" << userCards.back() << "] and that's why it is your turn again\n";
+			checkAndHandleFullSetUser(userCards, userPutDownCards);
 		}
 		else {
 			cout << "You did not get the card. Drawing a card from the deck...\n";

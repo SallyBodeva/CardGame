@@ -10,7 +10,7 @@ void printDeck(vector<string>& deck);
 void shuffleDeck(vector<string>& deck);
 
 bool isTheAskingValid(vector<string>& cards, string card);
-bool userTurn(vector<string>& userCards, vector<string>& computerCards, string card, vector<string>& mainDeck);
+bool userTurn(vector<string>& userCards, vector<string>& computerCards, string card, vector<string>& mainDeck, bool& isItFromMainDeck);
 string getRequestedCardForCompTurn(vector<string>& computerCards);
 bool compTurn(vector<string>& userCards, vector<string>& computerCards, vector<string>& mainDeck, string& requestedCard, bool response);
 bool playerHasFourCards(vector<string>& cards, string card);

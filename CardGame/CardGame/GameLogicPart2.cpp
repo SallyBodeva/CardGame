@@ -61,6 +61,8 @@ void startPart2(vector<string>& userSets, vector<string>& compSets) {
 					cin >> cardType;
 				}
 
+				cout << "\n";
+
 				if (doesOpponentHaveIt(userSets, compSets, cardType))
 				{
 					opponentGivesTheSet(userSets, compSets, cardType);
@@ -84,6 +86,7 @@ void startPart2(vector<string>& userSets, vector<string>& compSets) {
 		{
 			int randomSetIndex = rand() % validCardTypes.size();
 			string requestedSet = validCardTypes[randomSetIndex];
+			cout << "\n";
 			cout << "Your opponent asks for [" << requestedSet << "]. Do you have it? (yes/no): ";
 
 			cout << '\n';
