@@ -1,3 +1,14 @@
+/*
+* Solution to course project #8
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2024 / 2025
+* @author Salihe Ali Bodeva
+* @idnumber 9MI0600468
+* @compiler VS
+*
+* file with methods for helper functions
+*/
 #include <stdlib.h>
 #include <time.h>      
 #include <iostream>
