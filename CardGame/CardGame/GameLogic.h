@@ -16,7 +16,7 @@ bool compTurn(vector<string>& userCards, vector<string>& computerCards, vector<s
 bool playerHasFourCards(vector<string>& cards, string card);
 int getCardIndex(vector<string>& deck, string card);
 void putDownFullSet(vector<string>& playersCards, vector<string>& putDownSet, string card);
-bool checkCompFullSet(vector<string>& playerCards, vector<string>& putDownSet);
+bool checkCompFullSet(vector<string>& playerCards, vector<string>& putDownSet, string& power);
 bool checkUserFullSet(vector<string>& playerCards, vector<string>& putDownSet, string card, bool response);
 void checkAndHandleFullSetUser(std::vector<std::string>& userCards, std::vector<std::string>& userPutDownCards);
 void handleFullSetComp(std::vector<std::string>& compCards, std::vector<std::string>& compPutDownCards);

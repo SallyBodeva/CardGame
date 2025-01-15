@@ -203,7 +203,7 @@ void putDownFullSet(vector<string>& playersCards, vector<string>& putDownSet, st
 
 }
 
-bool checkCompFullSet(vector<string>& playerCards, vector<string>& putDownSet) {
+bool checkCompFullSet(vector<string>& playerCards, vector<string>& putDownSet, string& power) {
 
 	for (int i = 0; i < playerCards.size(); i++)
 	{
@@ -211,6 +211,7 @@ bool checkCompFullSet(vector<string>& playerCards, vector<string>& putDownSet) {
 
 		if (playerHasFourCards(playerCards, card))
 		{
+			power = card;
 			putDownFullSet(playerCards, putDownSet, card);
 			return  true;
 		}
@@ -268,7 +269,7 @@ void checkAndHandleFullSetUser(vector<string>& userCards, vector<string>& userPu
 
 		checkUserFullSet(userCards, userPutDownCards, card, true);
 		cout << "\n";
-		cout << "You successfully put down a full set of [" << card << "]!\n";
+		cout << "The user successfully put down a full set of [" << card << "]!\n";
 	}
 	else {
 		cout << "Okay, moving on...\n";
@@ -277,10 +278,11 @@ void checkAndHandleFullSetUser(vector<string>& userCards, vector<string>& userPu
 
 void handleFullSetComp(vector<string>& compCards, vector<string>& compPutDownCards)
 {
-	bool result = checkCompFullSet(compCards, compPutDownCards);
+	string card = "";
+	bool result = checkCompFullSet(compCards, compPutDownCards,card);
 	if (result)
 	{
-		cout << "Computer has collected a full set and puts it down.\n";
+		cout << "Computer has collected a full set" << " of [" << card << "] and puts it down.\n";
 	}
 }
 
@@ -358,7 +360,7 @@ void handleUserTurn(vector<string>& userCards, vector<string>& compCards, vector
 			cout << "You got all the [" << card << "] cards from your opponent!\n";
 			cout << "Your turn continues...\n";
 		}
-		else if(isItFromTheMainDeck)
+		else if (isItFromTheMainDeck)
 		{
 			cout << "You did not get the card from your opponent.  Drawing a card from the deck...\n";
 			cout << "You drew: [" << userCards.back() << "] and that's why it is your turn again\n";
