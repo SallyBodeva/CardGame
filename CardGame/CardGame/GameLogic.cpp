@@ -1,4 +1,4 @@
-/* 
+/*
 * Solution to course project #8
 * Introduction to programming course
 * Faculty of Mathematics and Informatics of Sofia University
@@ -6,8 +6,8 @@
 * @author Salihe Ali Bodeva
 * @idnumber 9MI0600468
 * @compiler VS
-* 
-* file with methods for game logic part 1 
+*
+* file with methods for game logic part 1
 */
 
 #include <stdlib.h>
@@ -153,7 +153,7 @@ string getRequestedCardForCompTurn(vector<string>& computerCards) {
 	return requestedCard;
 }
 
-bool compTurn(vector<string>& userCards, vector<string>& computerCards, vector<string>& mainDeck, string& requestedCard, bool response) {
+bool compTurn(vector<string>& userCards, vector<string>& computerCards, vector<string>& mainDeck, string& requestedCard, bool response, bool& isItFromMainDeck) {
 
 	bool continuousTurn = false;
 
@@ -172,6 +172,11 @@ bool compTurn(vector<string>& userCards, vector<string>& computerCards, vector<s
 		string cardFromMainDeck = mainDeck.back();
 		mainDeck.pop_back();
 		computerCards.push_back(cardFromMainDeck);
+
+		if (cardFromMainDeck == requestedCard)
+		{
+			isItFromMainDeck = true;
+		}
 
 		return cardFromMainDeck == requestedCard;
 
@@ -291,7 +296,7 @@ void checkAndHandleFullSetUser(vector<string>& userCards, vector<string>& userPu
 void handleFullSetComp(vector<string>& compCards, vector<string>& compPutDownCards)
 {
 	string card = "";
-	bool result = checkCompFullSet(compCards, compPutDownCards,card);
+	bool result = checkCompFullSet(compCards, compPutDownCards, card);
 	if (result)
 	{
 		cout << "Computer has collected a full set" << " of [" << card << "] and puts it down.\n";
@@ -368,15 +373,14 @@ void handleUserTurn(vector<string>& userCards, vector<string>& compCards, vector
 		bool result = userTurn(userCards, compCards, card, mainDeck, isItFromTheMainDeck);
 		cout << "\n";
 
-		if (result) {
+		if (result && isItFromTheMainDeck == false) {
 			cout << "You got all the [" << card << "] cards from your opponent!\n";
 			cout << "Your turn continues...\n";
 		}
 		else if (isItFromTheMainDeck)
 		{
 			cout << "You did not get the card from your opponent.  Drawing a card from the deck...\n";
-			cout << "You drew: [" << userCards.back() << "] and that's why it is your turn again\n";
-			checkAndHandleFullSetUser(userCards, userPutDownCards);
+			cout << "You drew: [" << card << "] and that's why it is your turn again\n";
 		}
 		else {
 			cout << "You did not get the card. Drawing a card from the deck...\n";
@@ -414,14 +418,20 @@ void handleComputerTurn(vector<string>& userCards, vector<string>& compCards, ve
 		printDeck(userCards);
 
 		bool hasCard = validateYesNoResponse();
+		bool isItFromTheMainDeck = false;
 
 		bool result = hasCard
-			? compTurn(userCards, compCards, mainDeck, requestedCard, true)
-			: compTurn(userCards, compCards, mainDeck, requestedCard, false);
+			? compTurn(userCards, compCards, mainDeck, requestedCard, true, isItFromTheMainDeck)
+			: compTurn(userCards, compCards, mainDeck, requestedCard, false, isItFromTheMainDeck);
 
 		cout << "\n";
-		if (result) {
+		if (result && isItFromTheMainDeck == false) {
 			cout << "The computer got the cards it wanted. Its turn continues...\n";
+		}
+		else if (isItFromTheMainDeck)
+		{
+			cout << "The computer did not get the card from the user.  Drawing a card from the deck...\n";
+			cout << "The computer drew: [" << requestedCard << "] and that's why it is its turn again\n";
 		}
 		else {
 			cout << "The computer did not get the card it wanted. Its turn is over.\n";
